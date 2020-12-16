@@ -5,5 +5,8 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Under Body Skin' });
 });
+router.get('/myviews', function(req, res, next) {
+  res.render('myviews');
+});
 
 module.exports = router;

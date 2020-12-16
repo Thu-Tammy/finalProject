@@ -8,6 +8,19 @@ var sassMiddleware = require('node-sass-middleware');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+var mongoose = require('mongoose')
+mongoose.connect('mongodb://localhost/finalProject', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+    // we're connected!cd
+    console.log('db connected.');
+});
+
 var app = express();
 
 // view engine setup
