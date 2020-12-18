@@ -18,6 +18,9 @@ html, body
     font-family: 'Times New Roman', Times, serif;
     font-size: 20px;
 
+.navbar
+    font-size: 100%
+
 .navbar li a 
     color: white !important
 
@@ -29,12 +32,18 @@ html, body
 
 .carousel-caption 
     position: absolute;
-    top: 80%;
+    top: 70%;
+    @media screen and (max-width: 600px)
+        top: 75% !important;
 
 .carousel-caption > a 
-    font-size: 170%;
+    font-size: 200%;
     text-transform: uppercase;
     text-shadow: 5px 5px 15px #000;
+    @media screen and (max-width: 600px) 
+        font-size: 100% !important;
+        color: black !important;
+        background-color: white !important;
 
 .jumbotron 
     padding: 1rem;
@@ -43,17 +52,22 @@ html, body
     text-align: justify;
     font-size: 40px !important;
     color: blue;
-    text-align: center;
+    text-align: center; 
+    @media screen and (max-width: 600px) 
+        font-size: 25px !important;
 
 .welcome hr 
-    border-top: 2px solid rgb(62,44,100);
+    border-top: 2px solid white;
     width: 95%;
     margin-bottom: 2rem;
 
 .col-12 h2 
     font-size: 30px !important;
+    color: white !important;
     margin-top: 5px;
     padding-top: 10px;
+    @media screen and (max-width: 600px) 
+        font-size: 20px !important;
 
 .container-fluid 
     
