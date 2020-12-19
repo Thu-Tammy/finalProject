@@ -28,7 +28,7 @@ db.once('open', function() {
 
 var app = express();
 
-//require('./config/passport'); //vượt qua passport để config trang đăng nhâp/đăng ký
+require('./config/passport'); //vượt qua passport để config trang đăng nhâp/đăng ký
 app.use(session({
   secret: 'adsa897adsa98bs',
   resave: false,

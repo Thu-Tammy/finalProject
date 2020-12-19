@@ -49,7 +49,7 @@ passport.use('local.signup',new LocalStrategy({
 User.findOne({ 'email': email }, function(err, user) {
        if (err) { return done(err); }
        if (!user) {
-         return done(null, false, { message : 'Not user found'})
+         return done(null, false, { message : 'User not found'})
        }
        if(!user.validPassword(password)){
       
