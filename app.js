@@ -4,8 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var sassMiddleware = require('node-sass-middleware');
-var passport = rewuire('passport');
+var passport = require('passport');
 var flash = require('connect-flash');
+var session = require('express-session');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -27,7 +28,7 @@ db.once('open', function() {
 
 var app = express();
 
-require('./config/passport'); //vượt qua passport để config trang đăng nhâp/đăng ký
+//require('./config/passport'); //vượt qua passport để config trang đăng nhâp/đăng ký
 app.use(session({
   secret: 'adsa897adsa98bs',
   resave: false,

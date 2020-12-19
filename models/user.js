@@ -7,7 +7,7 @@ let userSchema = new Schema({
   date: { type: Date, default: Date.now }
 });
 
-userSchema.methods.encryptPasswood = function(password){
+userSchema.methods.encryptPassword = function(password){
     return bcrypt.hashSync(password, bcrypt.genSaltSync(5),null)
 };
 
