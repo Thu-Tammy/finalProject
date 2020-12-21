@@ -10,4 +10,7 @@ router.get('/myviews', function(req, res, next) {
   res.render('myviews');
 });
 
+router.get('/letusfind', function(req, res, next) {
+  res.render('letusfind');
+});
 module.exports = router;
