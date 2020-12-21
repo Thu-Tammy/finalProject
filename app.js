@@ -10,6 +10,7 @@ var session = require('express-session');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var userLoginRouter = require('./routes/userLogin');
 var resourcesRouter = require('./routes/resources');
 
 
@@ -26,19 +27,19 @@ db.once('open', function() {
     console.log('db connected.');
 });
 
-var app = express();
+require('./config/passport')(passport); //vượt qua passport để config trang đăng nhâp/đăng ký
 
-require('./config/passport'); //vượt qua passport để config trang đăng nhâp/đăng ký
-app.use(session({
-  secret: 'adsa897adsa98bs',
-  resave: false,
-  saveUninitialized: false,
-}))
+var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+app.use(session({
+  secret: 'adsa897adsa98bs',
+  resave: false,
+  saveUninitialized: false,
+}))
 app.use(flash());
 app.use(passport.initialize())
 app.use(passport.session());
@@ -56,6 +57,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/userLogin', userLoginRouter);
 app.use('/resources', resourcesRouter);
 
 // catch 404 and forward to error handler

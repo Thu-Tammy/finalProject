@@ -1,56 +1,95 @@
-var express = require('express');
-var router = express.Router();
-var passport = require('passport');
-const {check, validationResult} = require('express-validator')
+const express = require('express');
+const router = express.Router();
+const bcrypt = require('bcrypt-nodejs');
+const passport = require('passport');
+// Load User model
+const User = require('../models/newUser');
+const { forwardAuthenticated } = require('../config/auth');
 
-router.get('/', function(req,res,next){
-  res.render('users')
-})
-/* GET sign-in and sign-up page */
-router.get('/signin', function(req, res, next) {
-  // Hiển thị trang và truyển lại những tin nhắn từ phía server nếu có
-  var messages = req.flash('error')
-  res.render('signin',{ 
-    messages: messages,
-    hasErrors: messages.length > 0,
-   })
-});
+// Login Page
+router.get('/login', forwardAuthenticated, (req, res) => res.render('login'));
 
-router.get('/signup', function(req, res, next) {
-  var messages = req.flash('error')
+// Register Page
+router.get('/register', forwardAuthenticated, (req, res) => res.render('register'));
 
-  res.render('signup',{ 
-    messages: messages,
-    hasErrors: messages.length > 0,
-   })
-});
+// Register
+router.post('/register', (req, res) => {
+const { name, email, password, password2 } = req.body;
+  let errors = [];
 
-/* Post sign-up page. */
-// Xử lý thông tin khi có người đăng ký
-router.post('/signup', 
-[
-  check('email', 'Your email is not valid').isEmail(),
-  check('password', 'Your password must be at least 5 characters').isLength({ min: 5 })
- ],
-  (function (req, res, next) {
-  var messages = req.flash('error');
-  const result= validationResult(req);
-  var errors=result.errors;
-  if (!result.isEmpty()) {
-    var messages = [];
-    errors.forEach(function(error){
-        messages.push(error.msg);
-    });
-    res.render('signup',{
-      messages: messages,
-      hasErrors: messages.length > 0,
-    });
-  }else{
-     next();
+  if (!name || !email || !password || !password2) {
+    errors.push({ msg: 'Please enter all fields' });
   }
-  }),
-  passport.authenticate('local.signup', { successRedirect: '/users/signin',
-                                  failureRedirect: '/users/signup',
-                                  failureFlash: true })
-);
+
+  if (password != password2) {
+    errors.push({ msg: 'Passwords do not match' });
+  }
+
+  if (password.length < 6) {
+    errors.push({ msg: 'Password must be at least 6 characters' });
+  }
+
+  if (errors.length > 0) {
+    res.render('register', {
+      errors,
+      name,
+      email,
+      password,
+      password2
+    });
+  } else {
+    User.findOne({ email: email }).then(user => {
+      if (user) {
+        errors.push({ msg: 'Email already exists' });
+        res.render('register', {
+          errors,
+          name,
+          email,
+          password,
+          password2
+        });
+      } else {
+        const newUser = new User({
+          name,
+          email,
+          password
+        });
+
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(newUser.password, salt, null, (err, hash) => {
+            if (err) throw err;
+            newUser.password = hash;
+            newUser
+              .save()
+              .then(user => {
+                req.flash(
+                  'success_msg',
+                  'You are now registered and can log in'
+                );
+                res.redirect('/users/login');
+              })
+              .catch(err => console.log(err));
+          });
+        });
+      }
+    });
+  }
+});
+
+// Login
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', {
+    successRedirect: '/userLogin/dashboard',
+    failureRedirect: '/users/login',
+    failureFlash: true
+  })(req, res, next);
+});
+
+// Logout
+router.get('/logout', (req, res) => {
+  req.logout();
+  req.flash('success_msg', 'You are logged out');
+  res.redirect('/users/login');
+});
+
 module.exports = router;
