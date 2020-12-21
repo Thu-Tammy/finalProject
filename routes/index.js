@@ -13,4 +13,17 @@ router.get('/myviews', function(req, res, next) {
 router.get('/letusfind', function(req, res, next) {
   res.render('letusfind');
 });
+
+router.get('/beforerepair', function(req, res, next) {
+  res.render('beforerepair');
+});
+
+router.get('/repairinprogress', function(req, res, next) {
+  res.render('repairinprogress');
+});
+
+router.get('/afterrepair', function(req, res, next) {
+  res.render('afterrepair');
+});
+
 module.exports = router;
