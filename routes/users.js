@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt-nodejs');
 const passport = require('passport');
 // Load User model
-const User = require('../models/newUser');
+const User = require('../models/user');
 const { forwardAuthenticated } = require('../config/auth');
 
 // Login Page
@@ -17,14 +17,17 @@ router.post('/register', (req, res) => {
 const { name, email, password, password2 } = req.body;
   let errors = [];
 
+  //check required field
   if (!name || !email || !password || !password2) {
     errors.push({ msg: 'Please enter all fields' });
   }
 
+  //check password match
   if (password != password2) {
     errors.push({ msg: 'Passwords do not match' });
   }
 
+  //check password length
   if (password.length < 6) {
     errors.push({ msg: 'Password must be at least 6 characters' });
   }
